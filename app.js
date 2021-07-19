@@ -17,6 +17,7 @@ const helmet = require('helmet');
 const colors = require('colors');
 const cron = require('node-cron');
 const crypto = require('crypto');
+const { OpticMiddleware } = require('@useoptic/express-middleware');
 const { getConfig, getPaymentConfig, updateConfigLocal } = require('./lib/config');
 const { runIndexing } = require('./lib/indexing');
 const { addSchemas } = require('./lib/schema');
@@ -362,6 +363,9 @@ app.use(session({
     },
     store: store
 }));
+app.use(OpticMiddleware({
+    enabled: process.env.NODE_ENV !== 'production'
+}))
 
 app.use(bodyParser.json({
     // Only on Stripe URL's which need the rawBody
